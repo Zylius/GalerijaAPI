@@ -8,8 +8,10 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use Galerija\APIBundle\Entity\Image;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 
 class ImageController extends FOSRestController implements ClassResourceInterface
 {
@@ -37,11 +39,11 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      *
      * @return View
      */
-    public function postAction(ParamFetcher $paramFetcher)
+    public function postAction(Request $request, ParamFetcher $paramFetcher)
     {
         $image = new Image();
 
-        $imageFile = imagecreatefromstring(base64_decode($paramFetcher->get('data')));
+        $imageFile = base64_decode($paramFetcher->get('data'));
 
         $image->setImagePath('images/'. uniqid() . '.png');
         $image->setTitle($paramFetcher->get('title'));
