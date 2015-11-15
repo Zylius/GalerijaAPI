@@ -154,7 +154,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      *   resource = true,
      *   description = "Finds image from database.",
      *   statusCodes = {
-     *     200 = "Returned when image was successfully deleted..",
+     *     200 = "Returned when image was successfully deleted.",
      *     400 = "Returned when image was not found."
      *   }
      * )
@@ -180,9 +180,39 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
         return $view->setData("Image successfully deleted.")->setStatusCode(200);
     }
 
-    public function patchAction()
+    /**
+     * Deletes image by id.
+     *
+     * @ApiDoc(
+     *   resource = true,
+     *   description = "Patches specified images.",
+     *   statusCodes = {
+     *     200 = "Returned when image patched successfully.",
+     *     400 = "Returned when one or more of the images were not found."
+     *   }
+     * )
+     *
+     * @QueryParam(name="image_ids", nullable=false, strict=true, description="Image of ids to work with.")
+     * @QueryParam(name="mode", nullable=false, strict=true, description="Which patch method to use.")
+     * @QueryParam(name="title", nullable=false, strict=true, description="Title to give new image.")
+     * @QueryParam(name="column_num", nullable=true, strict=false, description="Which patch method to use.")
+     *
+     * @return View
+     */
+    public function patchAction(ParamFetcher $paramFetcher)
     {
-
+        $imService = $this->container->get('galerija_api.images.image_manipulation');
+        switch($paramFetcher->get('mode')) {
+            case 'collage':
+                $image = $imService->makeCollage(
+                    json_decode($paramFetcher->get('image_ids')),
+                    $paramFetcher->get('title'),
+                    $paramFetcher->get('column_num')
+                );
+                return  View::create()->setData($image)->setStatusCode(200);
+            default:
+                return  View::create()->setData('Incorrect patch mode.')->setStatusCode(406);
+        }
     }
 
 }

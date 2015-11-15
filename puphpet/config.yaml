@@ -199,6 +199,7 @@ php:
             - intl
             - mcrypt
             - gd
+            - imagick
         pear: {  }
         pecl: {  }
     ini:
