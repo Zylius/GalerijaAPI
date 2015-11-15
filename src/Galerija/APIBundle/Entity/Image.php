@@ -35,7 +35,6 @@ class Image
      */
     private $imagePath;
 
-
     /**
      * Get id
      *

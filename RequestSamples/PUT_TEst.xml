@@ -1,0 +1,46 @@
+<RestClientRequest>
+  <option name="biscuits">
+    <list>
+      <Biscuit>
+        <option name="date" value="1454273986011" />
+        <option name="domain" value="awesome.dev" />
+        <option name="name" value="XDEBUG_SESSION" />
+        <option name="path" value="/" />
+        <option name="value" value="PHPSTORM" />
+      </Biscuit>
+    </list>
+  </option>
+  <option name="httpMethod" value="PUT" />
+  <option name="urlBase" value="http://awesome.dev" />
+  <option name="urlPath" value="/app_dev.php/images/1" />
+  <option name="headers">
+    <list>
+      <KeyValuePair>
+        <option name="key" value="Cache-Control" />
+        <option name="value" value="no-cache" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="Accept" />
+        <option name="value" value="*/*" />
+      </KeyValuePair>
+    </list>
+  </option>
+  <option name="parameters">
+    <list>
+      <KeyValuePair>
+        <option name="key" value="title" />
+        <option name="value" value="test" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="data" />
+        <option name="value" value="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" />
+      </KeyValuePair>
+    </list>
+  </option>
+  <option name="parametersEnabled" value="true" />
+  <option name="haveTextToSend" value="true" />
+  <option name="haveFileToSend" value="false" />
+  <option name="isFileUpload" value="false" />
+  <option name="textToSend" value="{&quot;data&quot;:&quot;test&quot;, &quot;title&quot;:&quot;test&quot;}" />
+  <option name="filesToSend" value="" />
+</RestClientRequest>
