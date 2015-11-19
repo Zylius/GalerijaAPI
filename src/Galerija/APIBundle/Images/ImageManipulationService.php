@@ -50,6 +50,81 @@ class ImageManipulationService
     }
 
     /**
+     * Resizes specified images.
+     *
+     * @param int[] $imageIds
+     * @param int   $width
+     * @param int   $height
+     *
+     * @return Image[]
+     */
+    public function resizeImages($imageIds, $width, $height)
+    {
+        /** @var Image[] $imageRecords */
+        $imageRecords = $this->repository->findBy(['id' => $imageIds]);
+
+        /** @var ImageInterface[] $photos */
+        $photos = [];
+        foreach ($imageRecords as $key => $record) {
+            $photos[$key] = $this->imagine->open($record->getImagePath());
+        }
+
+        foreach ($photos as $key => $photo) {
+            $photo->resize(new Box($width, $height));
+            $photo->save($imageRecords[$key]->getImagePath());
+            $this->em->persist($imageRecords[$key]);
+        }
+        $this->em->flush();
+
+        return $imageRecords;
+    }
+
+    /**
+     * Returns a <numColumns>x* collage of given images.
+     *
+     * @param int[]  $imageIds
+     * @param int    $numColumns
+     * @param string $title
+     *
+     * @return Image
+     */
+    public function makeCollage($imageIds, $title, $numColumns = 2)
+    {
+        if(!$numColumns) {
+            $numColumns = 2;
+        }
+        /** @var Image[] $imageRecords */
+        $imageRecords = $this->repository->findBy(['id' => $imageIds]);
+        $photos = [];
+        foreach ($imageRecords as $record) {
+            $photos[] = $this->imagine->load(file_get_contents($record->getImagePath()));
+        }
+        $photos = $this->sortPhotosByHeight($photos);
+
+        $imagesPerColumn = ceil(sizeof($photos) / $numColumns);
+        $columns = array_chunk($photos, $imagesPerColumn);
+        $normalizedColumns = $this->findImagePositions($columns);
+        $boxSize = $this->findBoxSize($normalizedColumns);
+        $collage = $this->imagine->create($boxSize);
+
+        foreach ($normalizedColumns as $column) {
+            foreach ($column as  $image) {
+                $collage->paste($image['image'], $image['top']);
+            }
+        }
+
+        $image = new Image();
+        $image->setImagePath('images/' . uniqid() . '.jpg');
+        $image->setTitle($title);
+        $collage->save($image->getImagePath());
+
+        $this->em->persist($image);
+        $this->em->flush();
+
+        return $image;
+    }
+
+    /**
      * Adds specifed watermark to given images.
      *
      * @param int[] $imageIds
@@ -95,51 +170,6 @@ class ImageManipulationService
         $bottomRight = new Point($size->getWidth() - $wSize->getWidth(), $size->getHeight() - $wSize->getHeight());
 
         $image->paste($watermark, $bottomRight);
-
-        return $image;
-    }
-
-    /**
-     * Returns a <numColumns>x* collage of given images.
-     *
-     * @param int[]  $imageIds
-     * @param int    $numColumns
-     * @param string $title
-     *
-     * @return Image
-     */
-    public function makeCollage($imageIds, $title, $numColumns = 2)
-    {
-        if(!$numColumns) {
-            $numColumns = 2;
-        }
-        /** @var Image[] $imageRecords */
-        $imageRecords = $this->repository->findBy(['id' => $imageIds]);
-        $photos = [];
-        foreach ($imageRecords as $record) {
-            $photos[] = $this->imagine->load(file_get_contents($record->getImagePath()));
-        }
-        $photos = $this->sortPhotosByHeight($photos);
-
-        $imagesPerColumn = ceil(sizeof($photos) / $numColumns);
-        $columns = array_chunk($photos, $imagesPerColumn);
-        $normalizedColumns = $this->findImagePositions($columns);
-        $boxSize = $this->findBoxSize($normalizedColumns);
-        $collage = $this->imagine->create($boxSize);
-
-        foreach ($normalizedColumns as $column) {
-            foreach ($column as  $image) {
-                $collage->paste($image['image'], $image['top']);
-            }
-        }
-
-        $image = new Image();
-        $image->setImagePath('images/' . uniqid() . '.jpg');
-        $image->setTitle($title);
-        $collage->save($image->getImagePath());
-
-        $this->em->persist($image);
-        $this->em->flush();
 
         return $image;
     }

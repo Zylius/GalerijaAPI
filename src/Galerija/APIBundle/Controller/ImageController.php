@@ -194,9 +194,11 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      *
      * @QueryParam(name="image_ids", nullable=false, strict=true, description="Image of ids to work with.")
      * @QueryParam(name="mode", nullable=false, strict=true, description="Which patch method to use.")
-     * @QueryParam(name="title", nullable=false, strict=true, description="Title to give new image.")
+     * @QueryParam(name="title", nullable=false, strict=false, description="Title to give new image.")
      * @QueryParam(name="column_num", nullable=true, strict=false, description="Which patch method to use.")
      * @QueryParam(name="watermark", nullable=true, strict=false, description="Which photo to use as watermark.")
+     * @QueryParam(name="width", nullable=true, strict=false, description="New photo width on resize.")
+     * @QueryParam(name="height", nullable=true, strict=false, description="New photo height on resize.")
      *
      * @return View
      */
@@ -217,9 +219,15 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
                     $paramFetcher->get('watermark')
                 );
                 return  View::create()->setData($images)->setStatusCode(200);
+            case 'resize':
+                $images = $imService->resizeImages(
+                    json_decode($paramFetcher->get('image_ids')),
+                    $paramFetcher->get('width'),
+                    $paramFetcher->get('height')
+                );
+                return  View::create()->setData($images)->setStatusCode(200);
             default:
                 return  View::create()->setData('Incorrect patch mode.')->setStatusCode(406);
         }
     }
-
 }
