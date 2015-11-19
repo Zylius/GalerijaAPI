@@ -50,7 +50,57 @@ class ImageManipulationService
     }
 
     /**
-     * Returns a 2x* collage of given images.
+     * Adds specifed watermark to given images.
+     *
+     * @param int[] $imageIds
+     * @param int   $watermarkImageId
+     *
+     * @return Image[]
+     */
+    public function addWatermark($imageIds, $watermarkImageId)
+    {
+        /** @var Image[] $imageRecords */
+        $imageRecords = $this->repository->findBy(['id' => $imageIds]);
+        $watermarkRecord = $this->repository->find($watermarkImageId);
+
+        $photos = [];
+        foreach ($imageRecords as $key => $record) {
+            $photos[$key] = $this->imagine->open($record->getImagePath());
+        }
+        $watermark = $this->imagine->open($watermarkRecord->getImagePath());
+
+        foreach ($photos as $key => $photo) {
+            $image = $this->applyWatermark($photo, $watermark);
+            $image->save($imageRecords[$key]->getImagePath());
+            $this->em->persist($imageRecords[$key]);
+        }
+        $this->em->flush();
+
+        return $imageRecords;
+    }
+
+    /**
+     * Applies watermark to image.
+     *
+     * @param ImageInterface   $image
+     * @param ImageInterface $watermark
+     *
+     * @return ImageInterface
+     */
+    private function applyWatermark(ImageInterface $image, ImageInterface $watermark)
+    {
+        $size = $image->getSize();
+        $wSize = $watermark->getSize();
+
+        $bottomRight = new Point($size->getWidth() - $wSize->getWidth(), $size->getHeight() - $wSize->getHeight());
+
+        $image->paste($watermark, $bottomRight);
+
+        return $image;
+    }
+
+    /**
+     * Returns a <numColumns>x* collage of given images.
      *
      * @param int[]  $imageIds
      * @param int    $numColumns

@@ -196,6 +196,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      * @QueryParam(name="mode", nullable=false, strict=true, description="Which patch method to use.")
      * @QueryParam(name="title", nullable=false, strict=true, description="Title to give new image.")
      * @QueryParam(name="column_num", nullable=true, strict=false, description="Which patch method to use.")
+     * @QueryParam(name="watermark", nullable=true, strict=false, description="Which photo to use as watermark.")
      *
      * @return View
      */
@@ -210,6 +211,12 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
                     $paramFetcher->get('column_num')
                 );
                 return  View::create()->setData($image)->setStatusCode(200);
+            case 'watermark':
+                $images = $imService->addWatermark(
+                    json_decode($paramFetcher->get('image_ids')),
+                    $paramFetcher->get('watermark')
+                );
+                return  View::create()->setData($images)->setStatusCode(200);
             default:
                 return  View::create()->setData('Incorrect patch mode.')->setStatusCode(406);
         }
