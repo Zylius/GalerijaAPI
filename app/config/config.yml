@@ -3,6 +3,16 @@ imports:
     - { resource: security.yml }
     - { resource: services.yml }
 
+knp_gaufrette:
+    adapters:
+        pictures:
+            local:
+                directory:  /
+                create:     true
+    filesystems:
+        pictures:
+            adapter: pictures
+            alias:   pictures_filesystem
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:

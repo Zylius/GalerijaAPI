@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new Galerija\APIBundle\GalerijaAPIBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new Liip\ImagineBundle\LiipImagineBundle(),
+            new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -5,11 +5,13 @@ namespace Galerija\APIBundle\Images;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Galerija\APIBundle\Entity\Image;
+use Gaufrette\Filesystem;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine;
+use Knp\Bundle\GaufretteBundle\FilesystemMap;
 
 class ImageManipulationService
 {
@@ -34,19 +36,24 @@ class ImageManipulationService
     private $baseDir;
 
     /**
+     * @var Filesystem
+     */
+    private $fileSystem;
+
+    /**
      * ImageManipulationService constructor.
      *
      * @param EntityManager $em
      * @param string $repository
      * @param ImagineInterface $imagine
-     * @param string $baseDir
+     * @param Filesystem $files
      */
-    public function __construct(EntityManager $em, $repository, ImagineInterface $imagine, $baseDir)
+    public function __construct(EntityManager $em, $repository, ImagineInterface $imagine, Filesystem $files)
     {
         $this->em = $em;
         $this->repository = $this->em->getRepository($repository);
         $this->imagine = $imagine;
-        $this->baseDir = $baseDir;
+        $this->fileSystem = $files;
     }
 
     /**
@@ -71,7 +78,7 @@ class ImageManipulationService
 
         foreach ($photos as $key => $photo) {
             $photo->resize(new Box($width, $height));
-            $photo->save($imageRecords[$key]->getImagePath());
+            $this->fileSystem->write($imageRecords[$key]->getImagePath(), $photo->show('jpg'));
             $this->em->persist($imageRecords[$key]);
         }
         $this->em->flush();
@@ -116,7 +123,7 @@ class ImageManipulationService
         $image = new Image();
         $image->setImagePath('images/' . uniqid() . '.jpg');
         $image->setTitle($title);
-        $collage->save($image->getImagePath());
+        $this->fileSystem->write($image->getImagePath(), $collage->show('jpg'));
 
         $this->em->persist($image);
         $this->em->flush();
@@ -146,7 +153,7 @@ class ImageManipulationService
 
         foreach ($photos as $key => $photo) {
             $image = $this->applyWatermark($photo, $watermark);
-            $image->save($imageRecords[$key]->getImagePath());
+            $this->fileSystem->write($imageRecords[$key]->getImagePath(), $image->show('jpg'));
             $this->em->persist($imageRecords[$key]);
         }
         $this->em->flush();
