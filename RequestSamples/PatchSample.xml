@@ -1,0 +1,50 @@
+<RestClientRequest>
+  <option name="biscuits">
+    <list>
+      <Biscuit>
+        <option name="date" value="1454273986011" />
+        <option name="domain" value="awesome.dev" />
+        <option name="name" value="XDEBUG_SESSION" />
+        <option name="path" value="/" />
+        <option name="value" value="PHPSTORM" />
+      </Biscuit>
+    </list>
+  </option>
+  <option name="httpMethod" value="PATCH" />
+  <option name="urlBase" value="http://awesome.dev" />
+  <option name="urlPath" value="/app_dev.php/image" />
+  <option name="headers">
+    <list>
+      <KeyValuePair>
+        <option name="key" value="Cache-Control" />
+        <option name="value" value="no-cache" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="Accept" />
+        <option name="value" value="*/*" />
+      </KeyValuePair>
+    </list>
+  </option>
+  <option name="parameters">
+    <list>
+      <KeyValuePair>
+        <option name="key" value="title" />
+        <option name="value" value="test" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="mode" />
+        <option name="value" value="collage" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="image_ids" />
+        <option name="value" value="[2,3]" />
+      </KeyValuePair>
+    </list>
+  </option>
+  <option name="parametersEnabled" value="true" />
+  <option name="haveTextToSend" value="false" />
+  <option name="haveFileToSend" value="false" />
+  <option name="isFileUpload" value="false" />
+  <option name="textToSend" value="" />
+  <option name="filesToSend" value="" />
+</RestClientRequest>

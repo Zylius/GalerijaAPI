@@ -67,17 +67,17 @@ class ImageManipulationService
         $imageRecords = $this->repository->findBy(['id' => $imageIds]);
         $photos = [];
         foreach ($imageRecords as $record) {
-            $photos[] = $this->imagine->load($record->getImagePath());
+            $photos[] = $this->imagine->load(file_get_contents($record->getImagePath()));
         }
         $photos = $this->sortPhotosByHeight($photos);
 
-        $imagesPerColumn = sizeof($photos) / $numColumns;
+        $imagesPerColumn = ceil(sizeof($photos) / $numColumns);
         $columns = array_chunk($photos, $imagesPerColumn);
         $normalizedColumns = $this->findImagePositions($columns);
         $boxSize = $this->findBoxSize($normalizedColumns);
         $collage = $this->imagine->create($boxSize);
 
-        foreach ($columns as $column) {
+        foreach ($normalizedColumns as $column) {
             foreach ($column as  $image) {
                 $collage->paste($image['image'], $image['top']);
             }
@@ -104,14 +104,15 @@ class ImageManipulationService
     private function findImagePositions($columns) {
         $normalizedColumns = [];
         foreach ($columns as $columnKey => $column) {
-            $x = 0;
+            $y = 0;
             foreach ($column as $imageKey => $image) {
-                $y = $columnKey > 0 ? $this->getColumnWidthAt($normalizedColumns[$columnKey - 1], $x) : 0;
+                $x = $columnKey > 0 ? $this->getColumnWidthAt($normalizedColumns[$columnKey - 1], $y) : 0;
                 $normalizedColumns[$columnKey][$imageKey] = [
                     'top' => new Point($x, $y),
-                    'bottom' => new Point($x + $image->getSize()->getHeight(), $y + $image->getSize()->getWidth()),
+                    'bottom' => new Point($x + $image->getSize()->getWidth(), $y + $image->getSize()->getHeight()),
                     'image' => $image
                 ];
+                $y += $image->getSize()->getHeight();
             }
         }
 
@@ -127,7 +128,7 @@ class ImageManipulationService
      */
     private function findBoxSize($normalizedColumns)
     {
-        $box = new Box(0,0);
+        $box = new Box(1,1);
         foreach ($normalizedColumns as $columnKey => $column) {
             foreach ($column as $imageKey => $image) {
                 /** @var Point $point */
@@ -161,7 +162,7 @@ class ImageManipulationService
                  * @var ImageInterface $a
                  * @var ImageInterface $b
                  */
-                return $a->getSize()->getHeight() > $b->getSize()->getHeight();
+                return $a->getSize()->getHeight() < $b->getSize()->getHeight();
             }
         );
 
@@ -180,9 +181,9 @@ class ImageManipulationService
             /** @var Point $bottom */
             $bottom = $item['bottom'];
             /** @var Point $top */
-            $top = $item['bottom'];
+            $top = $item['top'];
             if ($top->getX() <= $xPos && $bottom->getX() >= $xPos) {
-                return $bottom->getY();
+                return $bottom->getX();
             }
         }
 

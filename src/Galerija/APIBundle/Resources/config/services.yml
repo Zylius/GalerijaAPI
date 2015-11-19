@@ -1,4 +1,4 @@
 services:
     galerija_api.images.image_manipulation:
         class: Galerija\APIBundle\Images\ImageManipulationService
-        arguments: [@doctrine.orm.entity_manager, 'GalerijaAPIBundle:Image', @liip_imagine.imagick, %assetic.write_to%]
+        arguments: [@doctrine.orm.entity_manager, 'GalerijaAPIBundle:Image', @liip_imagine.gd, %assetic.write_to%]
