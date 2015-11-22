@@ -36,7 +36,7 @@ class ImageManipulationService
     private $baseDir;
 
     /**
-     * @var Filesystem
+     * @var ImageStoreService
      */
     private $fileSystem;
 
@@ -46,9 +46,9 @@ class ImageManipulationService
      * @param EntityManager $em
      * @param string $repository
      * @param ImagineInterface $imagine
-     * @param Filesystem $files
+     * @param ImageStoreService $files
      */
-    public function __construct(EntityManager $em, $repository, ImagineInterface $imagine, Filesystem $files)
+    public function __construct(EntityManager $em, $repository, ImagineInterface $imagine, ImageStoreService $files)
     {
         $this->em = $em;
         $this->repository = $this->em->getRepository($repository);
@@ -78,7 +78,7 @@ class ImageManipulationService
 
         foreach ($photos as $key => $photo) {
             $photo->resize(new Box($width, $height));
-            $this->fileSystem->write($imageRecords[$key]->getImagePath(), $photo->show('jpg'));
+            $this->fileSystem->saveImage($photo->get('png'), $imageRecords[$key]->getImagePath());
             $this->em->persist($imageRecords[$key]);
         }
         $this->em->flush();
@@ -121,9 +121,8 @@ class ImageManipulationService
         }
 
         $image = new Image();
-        $image->setImagePath('images/' . uniqid() . '.jpg');
+        $image->setImagePath($this->fileSystem->saveImage($photo->get('png')));
         $image->setTitle($title);
-        $this->fileSystem->write($image->getImagePath(), $collage->show('jpg'));
 
         $this->em->persist($image);
         $this->em->flush();
@@ -153,7 +152,7 @@ class ImageManipulationService
 
         foreach ($photos as $key => $photo) {
             $image = $this->applyWatermark($photo, $watermark);
-            $this->fileSystem->write($imageRecords[$key]->getImagePath(), $image->show('jpg'));
+            $this->fileSystem->write($imageRecords[$key]->getImagePath(), $image->get('png'), true);
             $this->em->persist($imageRecords[$key]);
         }
         $this->em->flush();

@@ -1,4 +1,8 @@
 services:
     galerija_api.images.image_manipulation:
         class: Galerija\APIBundle\Images\ImageManipulationService
-        arguments: [@doctrine.orm.entity_manager, 'GalerijaAPIBundle:Image', @liip_imagine.gd, "@=service('knp_gaufrette.filesystem_map').get('pictures')"]
+        arguments: [@doctrine.orm.entity_manager, 'GalerijaAPIBundle:Image', @liip_imagine.gd, @galerija_api.images.storage]
+
+    galerija_api.images.storage:
+        class: Galerija\APIBundle\Images\ImageStoreService
+        arguments: ["@=service('knp_gaufrette.filesystem_map').get('pictures')"]

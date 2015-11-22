@@ -48,19 +48,19 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
 
         $imageFile = base64_decode($paramFetcher->get('data'));
 
-        $image->setImagePath('images/'. uniqid() . '.png');
         $image->setTitle($paramFetcher->get('title'));
 
-
-        $imageSaveSuccess = file_put_contents($image->getImagePath(), $imageFile);
-
-        if($imageSaveSuccess) {
-            unlink($lastImage->getImagePath());
-            $em->persist($image);
-            $em->flush();
+        try {
+            $image->setImagePath($this->get('galerija_api.images.storage')->saveImage($imageFile));
+        } catch (\RuntimeException $ex) {
+            return $view->setStatusCode(400);
         }
 
-        return $imageSaveSuccess ? $view->setData($image)->setStatusCode(200) : $view->setStatusCode(400);
+        $this->get('galerija_api.images.storage')->deleteImage($lastImage->getImagePath());
+        $em->persist($image);
+        $em->flush();
+
+        return $view->setData($image)->setStatusCode(200);
     }
 
     /**
@@ -88,18 +88,21 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
 
         $imageFile = base64_decode($paramFetcher->get('data'));
 
-        $image->setImagePath('images/'. uniqid() . '.png');
         $image->setTitle($paramFetcher->get('title'));
 
-        $imageSaveSuccess = file_put_contents($image->getImagePath(), $imageFile);
+
         $view = View::create();
 
-        if($imageSaveSuccess) {
-            $this->getDoctrine()->getEntityManager()->persist($image);
-            $this->getDoctrine()->getEntityManager()->flush();
+        try {
+            $image->setImagePath($this->get('galerija_api.images.storage')->saveImage($imageFile));
+        } catch (\RuntimeException $ex) {
+            return $view->setStatusCode(400);
         }
 
-        return $imageSaveSuccess ? $view->setData($image)->setStatusCode(200) : $view->setStatusCode(400);
+        $this->getDoctrine()->getEntityManager()->persist($image);
+        $this->getDoctrine()->getEntityManager()->flush();
+
+        return $view->setData($image)->setStatusCode(200);
     }
 
     /**
@@ -175,7 +178,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
         $this->getDoctrine()->getManager()->detach($image);
         $this->getDoctrine()->getManager()->flush();
 
-        unlink($image->getImagePath());
+        $this->get('galerija_api.images.storage')->deleteImage($image->getImagePath());
 
         return $view->setData("Image successfully deleted.")->setStatusCode(200);
     }

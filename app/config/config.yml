@@ -7,7 +7,7 @@ knp_gaufrette:
     adapters:
         pictures:
             local:
-                directory:  /
+                directory:  "%assetic.write_to%"
                 create:     true
     filesystems:
         pictures:
