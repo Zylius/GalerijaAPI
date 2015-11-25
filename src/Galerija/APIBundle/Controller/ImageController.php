@@ -180,7 +180,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
 
         $this->get('galerija_api.images.storage')->deleteImage($image->getImagePath());
 
-        return $view->setData("Image successfully deleted.")->setStatusCode(200);
+        return $view->setData(['status' => "Image successfully deleted."])->setStatusCode(200);
     }
 
     /**

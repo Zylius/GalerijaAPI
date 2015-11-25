@@ -17,3 +17,8 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    galerija_api.dropbox.key: test
+    galerija_api.dropbox.secret: test
+    galerija_api.dropbox.token: test
+    galerija_api.dropbox.token_secret: test

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "654dc9441dd3403b6e7b611cdb26b93c",
-    "content-hash": "302321d372989ea069c32196709007de",
+    "hash": "ce4cbe365a65f4255053ee8f9176d4d1",
+    "content-hash": "4858c3052adf6d49df64357364d8c645",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -694,16 +694,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "e6a83bedbe67579cb0bfb688e982e617943a2945"
+                "reference": "464b5fdbfbbeb4a65465ac173c4c5d90960f41ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/e6a83bedbe67579cb0bfb688e982e617943a2945",
-                "reference": "e6a83bedbe67579cb0bfb688e982e617943a2945",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/464b5fdbfbbeb4a65465ac173c4c5d90960f41ff",
+                "reference": "464b5fdbfbbeb4a65465ac173c4c5d90960f41ff",
                 "shasum": ""
             },
             "require": {
@@ -714,12 +714,12 @@
                 "doctrine/instantiator": "~1.0.1",
                 "ext-pdo": "*",
                 "php": ">=5.4",
-                "symfony/console": "~2.5"
+                "symfony/console": "~2.5|~3.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.0",
                 "satooshi/php-coveralls": "dev-master",
-                "symfony/yaml": "~2.1"
+                "symfony/yaml": "~2.3|~3.0"
             },
             "suggest": {
                 "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
@@ -767,28 +767,27 @@
                 "database",
                 "orm"
             ],
-            "time": "2015-08-31 12:59:39"
+            "time": "2015-11-23 12:44:25"
         },
         {
             "name": "dropbox-php/dropbox-php",
-            "version": "1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Dropbox-PHP/dropbox-php.git",
-                "reference": "81977a8b021dd5a32b34d84721712f1284029667"
+                "reference": "de6495d56d91e96f4ff9ff61302f3cca3cefa7b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Dropbox-PHP/dropbox-php/zipball/81977a8b021dd5a32b34d84721712f1284029667",
-                "reference": "81977a8b021dd5a32b34d84721712f1284029667",
+                "url": "https://api.github.com/repos/Dropbox-PHP/dropbox-php/zipball/de6495d56d91e96f4ff9ff61302f3cca3cefa7b6",
+                "reference": "de6495d56d91e96f4ff9ff61302f3cca3cefa7b6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "suggest": {
-                "http_oauth": ">=1.1.18",
-                "oauth": "*"
+            "require-dev": {
+                "phpunit/phpunit": "4.2.*"
             },
             "type": "library",
             "autoload": {
@@ -802,12 +801,6 @@
             ],
             "authors": [
                 {
-                    "name": "Evert Pot",
-                    "email": "evert@rooftopsolutions.nl",
-                    "homepage": "http://www.rooftopsolutions.nl/",
-                    "role": "Developer"
-                },
-                {
                     "name": "Joe Constant",
                     "email": "lazyguru@jofee.com",
                     "homepage": "http://www.joeconstant.me/",
@@ -820,6 +813,12 @@
                 {
                     "name": "Naoki Sawada",
                     "role": "Developer"
+                },
+                {
+                    "name": "Evert Pot",
+                    "email": "me@evertpot.com",
+                    "homepage": "http://evertpot.com/",
+                    "role": "Developer"
                 }
             ],
             "description": "Dropbox PHP library",
@@ -827,7 +826,7 @@
             "keywords": [
                 "dropbox"
             ],
-            "time": "2012-09-10 06:07:54"
+            "time": "2015-06-11 03:09:55"
         },
         {
             "name": "friendsofsymfony/rest-bundle",
@@ -2014,23 +2013,23 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.7.6",
+            "version": "v2.7.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "66b2e9662c44d478b69e48278aa54079a006eb42"
+                "reference": "cc69dbd24b4b2e6de60b2414ef95da2794f459a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/66b2e9662c44d478b69e48278aa54079a006eb42",
-                "reference": "66b2e9662c44d478b69e48278aa54079a006eb42",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/cc69dbd24b4b2e6de60b2414ef95da2794f459a2",
+                "reference": "cc69dbd24b4b2e6de60b2414ef95da2794f459a2",
                 "shasum": ""
             },
             "require": {
                 "doctrine/common": "~2.4",
                 "php": ">=5.3.9",
                 "psr/log": "~1.0",
-                "twig/twig": "~1.20|~2.0"
+                "twig/twig": "~1.23|~2.0"
             },
             "replace": {
                 "symfony/asset": "self.version",
@@ -2110,6 +2109,9 @@
                 ],
                 "files": [
                     "src/Symfony/Component/Intl/Resources/stubs/functions.php"
+                ],
+                "exclude-from-classmap": [
+                    "**/Tests/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2131,7 +2133,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-10-27 19:07:24"
+            "time": "2015-11-23 11:58:08"
         },
         {
             "name": "twig/twig",
@@ -2337,7 +2339,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "knplabs/knp-gaufrette-bundle": 20
+        "knplabs/knp-gaufrette-bundle": 20,
+        "dropbox-php/dropbox-php": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

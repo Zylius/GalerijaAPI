@@ -6,6 +6,8 @@ imports:
 knp_gaufrette:
     adapters:
         pictures:
+#            dropbox:
+#                api_id: galerija_api.dropbox.api
             local:
                 directory:  "%assetic.write_to%"
                 create:     true

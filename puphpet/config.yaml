@@ -69,7 +69,8 @@ vagrantfile:
         host: detect
 server:
     install: '1'
-    packages: {  }
+    packages:
+      - ca-certificates
 users_groups:
     install: '1'
     groups: {  }
@@ -200,6 +201,7 @@ php:
             - mcrypt
             - gd
             - imagick
+            - curl
         pear: {  }
         pecl: {  }
     ini:
