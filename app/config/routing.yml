@@ -1,3 +1,7 @@
+galerija_frontend:
+    resource: "@GalerijaFrontendBundle/Resources/config/routing.yml"
+    prefix:   /
+
 galerija_api:
     resource: "@GalerijaAPIBundle/Resources/config/routing.yml"
     prefix:   /

@@ -1,6 +1,3 @@
-galerija_api_homepage:
-    path:     /
-    defaults: { _controller: GalerijaAPIBundle:Default:index }
 images:
     type:     rest
     resource: @GalerijaAPIBundle/Controller/ImageController.php
