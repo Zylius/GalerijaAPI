@@ -22,7 +22,9 @@
         "nelmio/api-doc-bundle": "^2.10",
         "liip/imagine-bundle": "^1.3",
         "knplabs/knp-gaufrette-bundle": "*@dev",
-        "dropbox-php/dropbox-php": "*@dev"
+        "dropbox-php/dropbox-php": "*@dev",
+        "leaseweb/api-caller-bundle": "*",
+        "kartik-v/bootstrap-fileinput": "@dev"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

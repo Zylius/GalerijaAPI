@@ -175,7 +175,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
             return $view->setStatusCode(404);
         }
 
-        $this->getDoctrine()->getManager()->detach($image);
+        $this->getDoctrine()->getManager()->remove($image);
         $this->getDoctrine()->getManager()->flush();
 
         $this->get('galerija_api.images.storage')->deleteImage($image->getImagePath());

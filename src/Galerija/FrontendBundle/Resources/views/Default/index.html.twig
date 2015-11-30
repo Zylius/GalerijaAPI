@@ -1,2 +1,43 @@
 {% extends "GalerijaFrontendBundle::layout.html.twig" %}
-{% block content %}Hello! {% endblock %}
+{% block content %}
+
+        <div class="container-page col-md-12">
+        <div class="clearfix" id="imageList">
+        {% for image in images %}
+            <div class="record pull-left" id="image-{{ image.id }}">
+                <div class="image-with-controls list-item">
+                    <div class="controls" >
+                        <a class="control-photo" onclick="deleteImage({{ image.id }});"><span class="glyphicon glyphicon-remove" ></span></a>
+                        <a class="control-photo" href="/"><span class="glyphicon glyphicon-pencil"></span></a>
+                    </div>
+                    <a class="imageHref" href="{{ asset(image.imagePath) }}">
+                        <img alt="{{ asset(image.title) }}" src="{{ asset(image.imagePath) }}"/>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+
+        </div>
+    <div class="panel panel-default upload-form" id="upload-form">
+        <div class="panel-heading ">Upload an image</div>
+        <div class="panel-body">
+            <form action="{{ path('post_image') }}" method="post" enctype='multipart/form-data'>
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" class="form-control" id="title">
+                </div>
+                <div class="form-group">
+                    <label for="image">Image file</label>
+                    <input id="input-id" name="image" type="file" class="file" data-preview-file-type="text" onchange="imageToBase64()"/>
+                </div>
+                <input id="hidden-base64" name="data" type="hidden" value=""/>
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/blueimp-gallery.min.js') }}"></script>
+    <script src="{{ asset('js/input.js') }}"></script>
+    <script src="{{ asset('bundles/galerijafrontend/js/main.js') }}"></script>
+{% endblock %}

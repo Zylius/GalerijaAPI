@@ -1,4 +1,12 @@
 {% extends '::base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@GalerijaFrontendBundle/Resources/public/css/*' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/input.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/blueimp-gallery.min.css') }}" />
+{% endblock %}
 {% block title %}Galerija{% endblock %}
 {% block body %}
 {% block content %} {% endblock %}
