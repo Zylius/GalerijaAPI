@@ -32,6 +32,10 @@ ul
     display: none;
 }
 
+.control-photo + input[type=checkbox]:checked {
+    display: inline;
+}
+
 .image-with-controls:hover .control-photo {
     display: inline;
 }

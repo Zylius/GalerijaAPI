@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
+use Imagine\Exception\InvalidArgumentException;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
@@ -29,8 +30,8 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      * @param ParamFetcher $paramFetcher Paramfetcher
      * @param string $slug
      *
-     * @QueryParam(name="title", nullable=false, strict=true, description="Title.")
-     * @QueryParam(name="data", nullable=false, strict=true, description="Image data.")
+     * @RequestParam(name="title", nullable=false, strict=true, description="Title.")
+     * @RequestParam(name="data", nullable=false, strict=true, description="Image data.")
      *
      * @return View
      */
@@ -195,39 +196,45 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      *   }
      * )
      *
-     * @QueryParam(name="image_ids", nullable=false, strict=true, description="Image of ids to work with.")
-     * @QueryParam(name="mode", nullable=false, strict=true, description="Which patch method to use.")
-     * @QueryParam(name="title", nullable=false, strict=false, description="Title to give new image.")
-     * @QueryParam(name="column_num", nullable=true, strict=false, description="Which patch method to use.")
-     * @QueryParam(name="watermark", nullable=true, strict=false, description="Which photo to use as watermark.")
-     * @QueryParam(name="width", nullable=true, strict=false, description="New photo width on resize.")
-     * @QueryParam(name="height", nullable=true, strict=false, description="New photo height on resize.")
+     * @RequestParam(name="image_ids", nullable=false, strict=false, description="Image of ids to work with.")
+     * @RequestParam(name="mode", nullable=false, strict=true, description="Which patch method to use.")
+     * @RequestParam(name="title", nullable=false, strict=false, description="Title to give new image.")
+     * @RequestParam(name="column_num", nullable=true, strict=false, description="Which patch method to use.")
+     * @RequestParam(name="watermark", nullable=true, strict=false, description="Which photo to use as watermark.")
+     * @RequestParam(name="width", nullable=true, strict=false, description="New photo width on resize.")
+     * @RequestParam(name="height", nullable=true, strict=false, description="New photo height on resize.")
      *
      * @return View
      */
     public function patchAction(ParamFetcher $paramFetcher)
     {
         $imService = $this->container->get('galerija_api.images.image_manipulation');
+        $imageIds = json_decode($paramFetcher->get('image_ids'));
         switch($paramFetcher->get('mode')) {
             case 'collage':
                 $image = $imService->makeCollage(
-                    json_decode($paramFetcher->get('image_ids')),
+                    $imageIds,
                     $paramFetcher->get('title'),
                     $paramFetcher->get('column_num')
                 );
                 return  View::create()->setData($image)->setStatusCode(200);
             case 'watermark':
                 $images = $imService->addWatermark(
-                    json_decode($paramFetcher->get('image_ids')),
+                    $imageIds,
                     $paramFetcher->get('watermark')
                 );
                 return  View::create()->setData($images)->setStatusCode(200);
             case 'resize':
-                $images = $imService->resizeImages(
-                    json_decode($paramFetcher->get('image_ids')),
-                    $paramFetcher->get('width'),
-                    $paramFetcher->get('height')
-                );
+                try {
+                    $images = $imService->resizeImages(
+                        $imageIds,
+                        $paramFetcher->get('width'),
+                        $paramFetcher->get('height')
+                    );
+                } catch (InvalidArgumentException $ex) {
+                    return  View::create()->setData('Watermark image is too big.')->setStatusCode(407);
+                }
+
                 return  View::create()->setData($images)->setStatusCode(200);
             default:
                 return  View::create()->setData('Incorrect patch mode.')->setStatusCode(406);

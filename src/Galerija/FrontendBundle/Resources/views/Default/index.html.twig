@@ -2,22 +2,82 @@
 {% block content %}
 
         <div class="container-page col-md-12">
-        <div class="clearfix" id="imageList">
+            <form action="{{ path('patch_image') }}">
+
+            <div class="clearfix" id="imageList">
         {% for image in images %}
             <div class="record pull-left" id="image-{{ image.id }}">
                 <div class="image-with-controls list-item">
                     <div class="controls" >
                         <a class="control-photo" onclick="deleteImage({{ image.id }});"><span class="glyphicon glyphicon-remove" ></span></a>
                         <a class="control-photo" href="/"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <input class="control-photo" onclick="addToSelected({{ image.id }})" type="checkbox" name="{{ image.id }}" value="{{ image.id }}">
                     </div>
                     <a class="imageHref" href="{{ asset(image.imagePath) }}">
-                        <img alt="{{ asset(image.title) }}" src="{{ asset(image.imagePath) }}"/>
+                        <img alt="{{ image.title }}" src="{{ asset(image.imagePath) }}"/>
                     </a>
                 </div>
             </div>
         {% endfor %}
-
         </div>
+            </form>
+            <div class="panel panel-default upload-form">
+        <div class="panel-heading ">Modify images</div>
+        <div class="panel-body">
+            <div class="panel panel-default upload-form">
+                <div class="panel-heading ">Make a collage of selected images</div>
+                <div class="panel-body">
+                    <form action="{{ path('patch_image') }}" id="collage-form" method="post">
+                        <div class="form-group">
+                            <label for="column_num">Number of columns:</label>
+                            <input type="text" name="column_num" class="form-control" value="2" id="column_num">
+                        </div>
+                        <div class="form-group">
+                            <label for="title">Collage name:</label>
+                            <input type="text" name="title" class="form-control" value="Collage name" id="title">
+                        </div>
+                        <input type="hidden" value="collage" name="mode">
+                        <button type="submit" class="pull-right btn btn-default">Make a collage</button>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-default upload-form">
+                <div class="panel-heading ">Resize selected images</div>
+                <div class="panel-body">
+                    <form action="{{ path('patch_image') }}" id="resize-form" method="post">
+                        <div class="form-group">
+                            <label for="width">Width</label>
+                            <input id="width" type="text" name="width" class="form-control" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Height</label>
+                            <input id="height" type="text" name="height" class="form-control" value="100" >
+                        </div>
+                        <input type="hidden" value="resize" name="mode">
+                        <button type="submit" class="pull-right btn btn-default">Resize</button>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-default upload-form">
+                <div class="panel-heading ">Apply watermark to selected images.</div>
+                <div class="panel-body">
+                    <form action="{{ path('patch_image') }}" id="watermark-form" method="post">
+                        <input type="hidden" value="watermark" name="mode">
+                        <div class="form-group">
+                            <label for="watermark">Photo to use as watermark</label>
+                            <br/>
+                            <select name="watermark" id="watermark">
+                                {% for image in images %}
+                                    <option value="{{ image.id }}"> {{ image.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="pull-right btn btn-default">Apply watermark</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="panel panel-default upload-form" id="upload-form">
         <div class="panel-heading ">Upload an image</div>
         <div class="panel-body">

@@ -121,7 +121,7 @@ class ImageManipulationService
         }
 
         $image = new Image();
-        $image->setImagePath($this->fileSystem->saveImage($photo->get('png')));
+        $image->setImagePath($this->fileSystem->saveImage($collage->get('png')));
         $image->setTitle($title);
 
         $this->em->persist($image);
@@ -152,7 +152,7 @@ class ImageManipulationService
 
         foreach ($photos as $key => $photo) {
             $image = $this->applyWatermark($photo, $watermark);
-            $this->fileSystem->write($imageRecords[$key]->getImagePath(), $image->get('png'), true);
+            $this->fileSystem->saveImage($image->get('png'), $imageRecords[$key]->getImagePath());
             $this->em->persist($imageRecords[$key]);
         }
         $this->em->flush();
