@@ -9,6 +9,8 @@
 namespace Galerija\APIBundle\Images;
 
 use Gaufrette\Filesystem;
+use Knp\Bundle\GaufretteBundle\FilesystemMap;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ImageStoreService
 {
@@ -18,13 +20,26 @@ class ImageStoreService
     private $files;
 
     /**
+     * @var integer
+     */
+    private $uId = null;
+
+    /**
      * ImageStoreService constructor.
      *
-     * @param Filesystem $files
+     * @param FilesystemMap $files
+     * @param RequestStack $request
+     * @param \Dropbox_OAuth_Curl $dropbox
      */
-    public function __construct(Filesystem $files)
+    public function __construct(FilesystemMap $files, RequestStack $request, \Dropbox_OAuth_Curl $dropbox)
     {
-        $this->files = $files;
+        if($request->getCurrentRequest()->getSession()->get('dropbox') !== null) {
+            $this->files = $files->get('pictures_dropbox');
+            $dropbox->setToken($request->getCurrentRequest()->getSession()->get('dropbox')['access']);
+            $this->uId = $request->getCurrentRequest()->getSession()->get('dropbox')['uid'];
+        } else {
+            $this->files = $files->get('pictures');
+        }
     }
 
     /**
@@ -54,5 +69,36 @@ class ImageStoreService
      */
     public function deleteImage($imagePath) {
         return $this->files->delete($imagePath);
+    }
+
+    /**
+     * Returns an image encoded.
+     *
+     * @param string $imagePath
+     *
+     * @return string
+     */
+    public function getImageBase64($imagePath) {
+        return base64_encode($this->files->get($imagePath)->getContent());
+    }
+
+    /**
+     * Returns raw image.
+     *
+     * @param string $imagePath
+     *
+     * @return string
+     */
+    public function getImage($imagePath) {
+        return $this->files->get($imagePath)->getContent();
+    }
+
+    /**
+     * Returns storage id.
+     *
+     * @return string
+     */
+    public function getStorageId() {
+        return $this->uId ? $this->uId : 'local';
     }
 }

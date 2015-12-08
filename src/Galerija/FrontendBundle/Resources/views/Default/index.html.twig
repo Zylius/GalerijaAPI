@@ -13,8 +13,8 @@
                         <a class="control-photo" href="/"><span class="glyphicon glyphicon-pencil"></span></a>
                         <input class="control-photo" onclick="addToSelected({{ image.id }})" type="checkbox" name="{{ image.id }}" value="{{ image.id }}">
                     </div>
-                    <a class="imageHref" href="{{ asset(image.imagePath) }}">
-                        <img alt="{{ image.title }}" src="{{ asset(image.imagePath) }}"/>
+                    <a class="imageHref" href="data:image/png;base64,{{ image_storage.getImageBase64(image.imagePath) }}">
+                        <img alt="{{ image.title }}" src="data:image/png;base64,{{ image_storage.getImageBase64(image.imagePath) }}"/>
                     </a>
                 </div>
             </div>

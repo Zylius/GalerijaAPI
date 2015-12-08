@@ -1,3 +1,9 @@
 galerija_frontend_homepage:
     path:     /
     defaults: { _controller: GalerijaFrontendBundle:Default:index }
+galerija_dropbox:
+    path:     /dropbox
+    defaults: { _controller: GalerijaFrontendBundle:Default:dropbox }
+galerija_dropbox_complete:
+    path:     /dropboxComplete
+    defaults: { _controller: GalerijaFrontendBundle:Default:dropboxComplete }

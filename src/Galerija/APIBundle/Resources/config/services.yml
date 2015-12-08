@@ -5,7 +5,7 @@ services:
 
     galerija_api.images.storage:
         class: Galerija\APIBundle\Images\ImageStoreService
-        arguments: ["@=service('knp_gaufrette.filesystem_map').get('pictures')"]
+        arguments: [@knp_gaufrette.filesystem_map, @request_stack, @galerija_api.dropbox.oauth]
 
     galerija_api.dropbox.oauth:
         class: Dropbox_OAuth_Curl
@@ -14,5 +14,5 @@ services:
             - [setToken, ["%galerija_api.dropbox.token%", "%galerija_api.dropbox.token_secret%"]]
 
     galerija_api.dropbox.api:
-        class: Dropbox_API
+        class: Galerija\APIBundle\Images\DropboxAPI
         arguments: [@galerija_api.dropbox.oauth, "sandbox"]

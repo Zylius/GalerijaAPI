@@ -1,0 +1,9 @@
+{% extends "GalerijaFrontendBundle::layout.html.twig" %}
+{% block content %}
+<a href="{{ url }}">{{ url }}</a>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/blueimp-gallery.min.js') }}"></script>
+    <script src="{{ asset('js/input.js') }}"></script>
+    <script src="{{ asset('bundles/galerijafrontend/js/main.js') }}"></script>
+{% endblock %}

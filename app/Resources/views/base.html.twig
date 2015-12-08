@@ -40,6 +40,9 @@
                             <li class="{% if app.request.attributes.get('_route') ==  'galerija_frontend_homepage'%}active{% endif %}">
                                 <a href="{{ path('galerija_frontend_homepage') }}">{{ "Home" | trans }}</a>
                             </li>
+                            <li class="pull-right {% if app.request.attributes.get('_route') ==  'galerija_dropbox'%}active{% endif %}">
+                                <a href="{{ path('galerija_dropbox') }}" {% if image_storage.getStorageId() != 'local' %} style="color: green" {% endif %}>{{ "Dropbox" | trans }}</a>
+                            </li>
                         {% endblock %}
                     </ul>
                     <ul class="nav navbar-nav pull-right">

@@ -36,6 +36,13 @@ class Image
     private $imagePath;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="storageId", type="string", length=255)
+     */
+    private $storageId;
+
+    /**
      * Get id
      *
      * @return integer
@@ -91,6 +98,30 @@ class Image
     public function getImagePath()
     {
         return $this->imagePath;
+    }
+
+    /**
+     * Set storageId
+     *
+     * @param string $storageId
+     *
+     * @return Image
+     */
+    public function setStorageId($storageId)
+    {
+        $this->storageId = $storageId;
+
+        return $this;
+    }
+
+    /**
+     * Get storageId
+     *
+     * @return string
+     */
+    public function getStorageId()
+    {
+        return $this->storageId;
     }
 }
 

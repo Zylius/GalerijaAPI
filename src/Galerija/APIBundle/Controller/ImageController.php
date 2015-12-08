@@ -50,6 +50,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
         $imageFile = base64_decode($paramFetcher->get('data'));
 
         $image->setTitle($paramFetcher->get('title'));
+        $image->setStorageId($this->get('galerija_api.images.storage')->getStorageId());
 
         try {
             $image->setImagePath($this->get('galerija_api.images.storage')->saveImage($imageFile));
@@ -90,7 +91,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
         $imageFile = base64_decode($paramFetcher->get('data'));
 
         $image->setTitle($paramFetcher->get('title'));
-
+        $image->setStorageId($this->get('galerija_api.images.storage')->getStorageId());
 
         $view = View::create();
 
@@ -139,13 +140,15 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      *   statusCodes = {
      *     200 = "Returned when images are successfully returned.",
      *   }
-     * )
      *
+     * )
+     * @QueryParam(name="storageId", nullable=true, strict=false, description="Storage to get images from.")
      * @return View
      */
-    public function getAllAction()
+    public function getAllAction(ParamFetcher $paramFetcher)
     {
-        $images = $this->getDoctrine()->getEntityManager()->getRepository("GalerijaAPIBundle:Image")->findAll();
+        $storage = $paramFetcher->get('storageId') !== null ? $paramFetcher->get('storageId') : 'local';
+        $images = $this->getDoctrine()->getEntityManager()->getRepository("GalerijaAPIBundle:Image")->findBy(['storageId' => $storage]);
         $view = View::create();
 
         return $view->setData($images)->setStatusCode(200);

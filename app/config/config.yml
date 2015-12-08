@@ -6,15 +6,19 @@ imports:
 knp_gaufrette:
     adapters:
         pictures:
-#            dropbox:
-#                api_id: galerija_api.dropbox.api
             local:
                 directory:  "%assetic.write_to%"
                 create:     true
+        pictures_dropbox:
+            dropbox:
+                api_id: galerija_api.dropbox.api
     filesystems:
         pictures:
             adapter: pictures
             alias:   pictures_filesystem
+        pictures_dropbox:
+            adapter: pictures_dropbox
+            alias:   pictures_dropbox_filesystem
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
@@ -49,6 +53,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+      image_storage: "@galerija_api.images.storage"
 
 # Assetic Configuration
 assetic:

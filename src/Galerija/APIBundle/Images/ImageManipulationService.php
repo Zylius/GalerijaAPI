@@ -73,7 +73,7 @@ class ImageManipulationService
         /** @var ImageInterface[] $photos */
         $photos = [];
         foreach ($imageRecords as $key => $record) {
-            $photos[$key] = $this->imagine->open($record->getImagePath());
+            $photos[$key] = $this->imagine->load($this->fileSystem->getImage($record->getImagePath()));
         }
 
         foreach ($photos as $key => $photo) {
@@ -104,7 +104,7 @@ class ImageManipulationService
         $imageRecords = $this->repository->findBy(['id' => $imageIds]);
         $photos = [];
         foreach ($imageRecords as $record) {
-            $photos[] = $this->imagine->load(file_get_contents($record->getImagePath()));
+            $photos[] = $this->imagine->load($this->fileSystem->getImage($record->getImagePath()));
         }
         $photos = $this->sortPhotosByHeight($photos);
 
@@ -123,6 +123,7 @@ class ImageManipulationService
         $image = new Image();
         $image->setImagePath($this->fileSystem->saveImage($collage->get('png')));
         $image->setTitle($title);
+        $image->setStorageId($this->fileSystem->getStorageId());
 
         $this->em->persist($image);
         $this->em->flush();
@@ -146,9 +147,9 @@ class ImageManipulationService
 
         $photos = [];
         foreach ($imageRecords as $key => $record) {
-            $photos[$key] = $this->imagine->open($record->getImagePath());
+            $photos[$key] = $this->imagine->load($this->fileSystem->getImage($record->getImagePath()));
         }
-        $watermark = $this->imagine->open($watermarkRecord->getImagePath());
+        $watermark = $this->imagine->load($this->fileSystem->getImage($watermarkRecord->getImagePath()));
 
         foreach ($photos as $key => $photo) {
             $image = $this->applyWatermark($photo, $watermark);
