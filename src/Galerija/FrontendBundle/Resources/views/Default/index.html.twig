@@ -5,20 +5,6 @@
             <form action="{{ path('patch_image') }}">
 
             <div class="clearfix" id="imageList">
-        {% for image in images %}
-            <div class="record pull-left" id="image-{{ image.id }}">
-                <div class="image-with-controls list-item">
-                    <div class="controls" >
-                        <a class="control-photo" onclick="deleteImage({{ image.id }});"><span class="glyphicon glyphicon-remove" ></span></a>
-                        <a class="control-photo" href="/"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <input class="control-photo" onclick="addToSelected({{ image.id }})" type="checkbox" name="{{ image.id }}" value="{{ image.id }}">
-                    </div>
-                    <a class="imageHref" href="data:image/png;base64,{{ image_storage.getImageBase64(image.imagePath) }}">
-                        <img alt="{{ image.title }}" src="data:image/png;base64,{{ image_storage.getImageBase64(image.imagePath) }}"/>
-                    </a>
-                </div>
-            </div>
-        {% endfor %}
         </div>
             </form>
             <div class="panel panel-default upload-form">
@@ -36,6 +22,7 @@
                             <label for="title">Collage name:</label>
                             <input type="text" name="title" class="form-control" value="Collage name" id="title">
                         </div>
+                        <input type="hidden" value="collage" name="mode">
                         <input type="hidden" value="collage" name="mode">
                         <button type="submit" class="pull-right btn btn-default">Make a collage</button>
                     </form>
@@ -67,9 +54,6 @@
                             <label for="watermark">Photo to use as watermark</label>
                             <br/>
                             <select name="watermark" id="watermark">
-                                {% for image in images %}
-                                    <option value="{{ image.id }}"> {{ image.title }}</option>
-                                {% endfor %}
                             </select>
                         </div>
                         <button type="submit" class="pull-right btn btn-default">Apply watermark</button>

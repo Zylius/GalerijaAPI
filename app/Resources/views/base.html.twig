@@ -5,6 +5,8 @@
     <title>{% block title %}Welcome!{% endblock %}</title>
     {% block stylesheets %}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 </head>
@@ -41,7 +43,7 @@
                                 <a href="{{ path('galerija_frontend_homepage') }}">{{ "Home" | trans }}</a>
                             </li>
                             <li class="pull-right {% if app.request.attributes.get('_route') ==  'galerija_dropbox'%}active{% endif %}">
-                                <a href="{{ path('galerija_dropbox') }}" {% if image_storage.getStorageId() != 'local' %} style="color: green" {% endif %}>{{ "Dropbox" | trans }}</a>
+                                <a href="{{ path('galerija_dropbox') }}" {% if image_storage.getStorageTypeFromCookie() != 'local' %} style="color: green" {% endif %}>{{ "Dropbox" | trans }}</a>
                             </li>
                         {% endblock %}
                     </ul>
@@ -67,6 +69,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     {% block javascripts %}{% endblock %}
 </div>
 </body>

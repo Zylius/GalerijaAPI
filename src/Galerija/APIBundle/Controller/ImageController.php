@@ -32,6 +32,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      *
      * @RequestParam(name="title", nullable=false, strict=true, description="Title.")
      * @RequestParam(name="data", nullable=false, strict=true, description="Image data.")
+     * @RequestParam(name="dropbox_auth", nullable=true, strict=false, description="Storage hash for dropbox.")
      *
      * @return View
      */
@@ -61,6 +62,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
         $this->get('galerija_api.images.storage')->deleteImage($lastImage->getImagePath());
         $em->persist($image);
         $em->flush();
+        $this->get('galerija_api.images.storage')->setImageData($image);
 
         return $view->setData($image)->setStatusCode(200);
     }
@@ -81,6 +83,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      *
      * @RequestParam(name="title", nullable=false, strict=true, description="Title.")
      * @RequestParam(name="data", nullable=false, strict=true, description="Image data.")
+     * @RequestParam(name="dropbox_auth", nullable=true, strict=false, description="Storage hash for dropbox.")
      *
      * @return View
      */
@@ -103,6 +106,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
 
         $this->getDoctrine()->getEntityManager()->persist($image);
         $this->getDoctrine()->getEntityManager()->flush();
+        $this->get('galerija_api.images.storage')->setImageData($image);
 
         return $view->setData($image)->setStatusCode(200);
     }
@@ -120,12 +124,14 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      * )
      *
      * @param string $slug
+     * @RequestParam(name="dropbox_auth", nullable=true, strict=false, description="Storage hash for dropbox.")
      *
      * @return View
      */
     public function getAction($slug)
     {
         $image = $this->getDoctrine()->getRepository("GalerijaAPIBundle:Image")->find($slug);
+        $this->get('galerija_api.images.storage')->setImageData($image);
         $view = View::create();
 
         return $image ? $view->setData($image)->setStatusCode(200) : $view->setStatusCode(404);
@@ -142,13 +148,18 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      *   }
      *
      * )
-     * @QueryParam(name="storageId", nullable=true, strict=false, description="Storage to get images from.")
+     *
+     * @RequestParam(name="dropbox_auth", nullable=true, strict=false, description="Storage hash for dropbox.")
+     *
      * @return View
      */
     public function getAllAction(ParamFetcher $paramFetcher)
     {
-        $storage = $paramFetcher->get('storageId') !== null ? $paramFetcher->get('storageId') : 'local';
-        $images = $this->getDoctrine()->getEntityManager()->getRepository("GalerijaAPIBundle:Image")->findBy(['storageId' => $storage]);
+        $images = $this->getDoctrine()->getEntityManager()->getRepository("GalerijaAPIBundle:Image")->findBy(
+            ['storageId' => $this->get('galerija_api.images.storage')->getStorageId()]
+        );
+        $this->get('galerija_api.images.storage')->setImageData($images);
+
         $view = View::create();
 
         return $view->setData($images)->setStatusCode(200);
@@ -167,6 +178,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      * )
      *
      * @param string $slug
+     * @RequestParam(name="dropbox_auth", nullable=true, strict=false, description="Storage hash for dropbox.")
      *
      * @return View
      */
@@ -206,6 +218,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
      * @RequestParam(name="watermark", nullable=true, strict=false, description="Which photo to use as watermark.")
      * @RequestParam(name="width", nullable=true, strict=false, description="New photo width on resize.")
      * @RequestParam(name="height", nullable=true, strict=false, description="New photo height on resize.")
+     * @RequestParam(name="dropbox_auth", nullable=true, strict=false, description="Storage hash for dropbox.")
      *
      * @return View
      */
@@ -220,12 +233,14 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
                     $paramFetcher->get('title'),
                     $paramFetcher->get('column_num')
                 );
+                $this->get('galerija_api.images.storage')->setImageData($image);
                 return  View::create()->setData($image)->setStatusCode(200);
             case 'watermark':
                 $images = $imService->addWatermark(
                     $imageIds,
                     $paramFetcher->get('watermark')
                 );
+                $this->get('galerija_api.images.storage')->setImageData($images);
                 return  View::create()->setData($images)->setStatusCode(200);
             case 'resize':
                 try {
@@ -234,6 +249,7 @@ class ImageController extends FOSRestController implements ClassResourceInterfac
                         $paramFetcher->get('width'),
                         $paramFetcher->get('height')
                     );
+                    $this->get('galerija_api.images.storage')->setImageData($images);
                 } catch (InvalidArgumentException $ex) {
                     return  View::create()->setData('Watermark image is too big.')->setStatusCode(407);
                 }

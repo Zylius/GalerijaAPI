@@ -43,6 +43,27 @@ class Image
     private $storageId;
 
     /**
+     * @var string
+     */
+    private $imageData;
+
+    /**
+     * @return string
+     */
+    public function getImageData()
+    {
+        return $this->imageData;
+    }
+
+    /**
+     * @param string $imageData
+     */
+    public function setImageData($imageData)
+    {
+        $this->imageData = $imageData;
+    }
+
+    /**
      * Get id
      *
      * @return integer

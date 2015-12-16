@@ -2,27 +2,39 @@
 
 namespace Galerija\FrontendBundle\Controller;
 
+use Galerija\APIBundle\Images\ImageStoreService;
 use Lsw\ApiCallerBundle\Call\HttpGetJson;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
-    public function indexAction()
+    /**
+     * Main page.
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request)
     {
-        $images = $this->get('api_caller')->call(
-            new HttpGetJson('http://awesome.dev' . $this->get('router')->generate('get_image_all'),
-                ['storageId' => $this->get('galerija_api.images.storage')->getStorageId()])
-        );
-
-        return $this->render('GalerijaFrontendBundle:Default:index.html.twig', ['images' => $images]);
+        return $this->render('GalerijaFrontendBundle:Default:index.html.twig');
     }
 
+    /**
+     * Request to authenticate with dropbox.
+     *
+     * @return RedirectResponse
+     * @throws \Dropbox_Exception_RequestToken
+     */
     public function dropboxAction()
     {
-        if($this->get('galerija_api.images.storage')->getStorageId() !== 'local') {
-            $this->get('session')->remove('dropbox');
-            return $this->redirectToRoute('galerija_frontend_homepage');
+        if($this->get('galerija_api.images.storage')->getStorageTypeFromCookie() !== 'local') {
+            $response = new RedirectResponse($this->get('router')->generate('galerija_frontend_homepage'));
+            $response->headers->clearCookie(ImageStoreService::DROPBOX_STORAGE_NAME);
+
+            return $response;
         }
 
         $dropboxApi = $this->get('galerija_api.dropbox.oauth');
@@ -31,19 +43,29 @@ class DefaultController extends Controller
         return $this->redirect($dropboxApi->getAuthorizeUrl('http://awesome.dev' . $this->get('router')->generate('galerija_dropbox_complete')));
     }
 
+    /**
+     * Once authenticated, save the data.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws \Dropbox_Exception_RequestToken
+     */
     public function dropboxCompleteAction(Request $request)
     {
         $session = $this->get('session');
 
         $dropboxApi = $this->get('galerija_api.dropbox.oauth');
         $dropboxApi->setToken($session->get('dropbox')['request']);
-        $session->set('dropbox',
-            array_merge($session->get('dropbox'), [
+        $cookieCode = $this->get('galerija_api.images.storage')->saveStorage(
+            [
+                'request' => $session->get('dropbox')['request'],
                 'access' => $dropboxApi->getAccessToken(),
                 'uid' => $request->get('uid')
-            ])
+            ]
         );
+        $response = new RedirectResponse($this->get('router')->generate('galerija_frontend_homepage'));
+        $response->headers->setCookie(new Cookie(ImageStoreService::DROPBOX_STORAGE_NAME, $cookieCode, 0, '/', null, false, false));
 
-        return $this->redirectToRoute('galerija_frontend_homepage');
+        return $response;
     }
 }
