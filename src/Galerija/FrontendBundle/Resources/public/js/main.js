@@ -84,7 +84,6 @@ function deleteImage(id)
         type: 'DELETE',
         data: {dropbox_auth: $.cookie("dropbox_auth")},
         success: function(result) {
-            selected.splice(selected.indexOf(id), 1);
             removeImage(id);
         }
     });
@@ -136,6 +135,7 @@ function addImage(image)
 
 function removeImage(id)
 {
+    selected.splice(selected.indexOf(id), 1);
     $("#image-" + id).remove();
     $("#image-watermark-" + id).remove();
 }

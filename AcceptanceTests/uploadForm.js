@@ -1,4 +1,4 @@
-var homePage = 'http://awesome.dev/app_dev.php';
+var homePage = 'http://127.0.0.1:8000/';
 casper.test.begin('Testing image upload', 3, function suite(test) {
     casper.on('remote.message', function(message) {
         this.echo(message);
