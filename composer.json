@@ -24,7 +24,8 @@
         "knplabs/knp-gaufrette-bundle": "*@dev",
         "dropbox-php/dropbox-php": "*@dev",
         "leaseweb/api-caller-bundle": "*",
-        "kartik-v/bootstrap-fileinput": "@dev"
+        "kartik-v/bootstrap-fileinput": "@dev",
+        "deployer/deployer": "^3.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
