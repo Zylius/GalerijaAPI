@@ -1,4 +1,4 @@
-var homePage = 'http://127.0.0.1:8000/';
+var homePage = 'http://127.0.0.1:8000/web/app_dev.php/';
 casper.test.begin('Testing image upload', 3, function suite(test) {
     casper.on('remote.message', function(message) {
         this.echo(message);
@@ -25,7 +25,7 @@ casper.test.begin('Testing image upload', 3, function suite(test) {
 
     ///should be deleted
     casper.then(function() {
-        this.wait(5000, function() {
+        this.wait(10000, function() {
             this.capture('test.png');
             test.assertDoesntExist('.imageHref');
         });

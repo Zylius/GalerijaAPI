@@ -10,6 +10,5 @@ before_script:
   - npm install -g casperjs
 script:
   - php -S 127.0.0.1:8000 &
-  - php codecept.phar run
   - php app/console doctrine:schema:create
   - casperjs test AcceptanceTests/uploadForm.js
