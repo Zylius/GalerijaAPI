@@ -100,7 +100,7 @@ function addImage(image)
     $("#imageList").append('<div class="record pull-left" id="image-' + image.id + '">' +
         '<div class="image-with-controls list-item">' +
         '<div class="controls" >' +
-        '<a href="#" class="control-photo" onclick="deleteImage(' + image.id + ');"><span class="glyphicon glyphicon-remove" ></span></a>' +
+        '<a href="#" class="control-photo delete-image" onclick="deleteImage(' + image.id + ');"><span class="glyphicon glyphicon-remove" ></span></a>' +
         '<a href="#" class="control-photo" onclick="$( \'#edit-dialog-' + image.id + '\').dialog( \'open\' );    event.stopPropagation();" ><span class="glyphicon glyphicon-pencil"></span></a>' +
         '<input class="control-photo" onclick="addToSelected(' + image.id + ')" type="checkbox" name="' + image.id + '" value="' + image.id + '">' +
         '</div>' +
