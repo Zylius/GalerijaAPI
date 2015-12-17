@@ -11,4 +11,5 @@ before_script:
 script:
   - php -S 127.0.0.1:8000 &
   - php app/console doctrine:schema:create
+  - php app/console assetic:dump
   - casperjs test AcceptanceTests/uploadForm.js
