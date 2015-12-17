@@ -35,7 +35,7 @@ $(document).ready(function() {
         type: 'PATCH'
     });
     $.ajax({
-        url: 'http://awesome.dev/app_dev.php/image/all',
+        url: document.location + 'image/all',
         type: 'GET',
         data: {dropbox_auth: $.cookie("dropbox_auth")},
         success: function(result) {
@@ -80,7 +80,7 @@ function deleteImage(id)
 {
     event.stopPropagation();
     $.ajax({
-        url: 'http://awesome.dev/app_dev.php/images/' + id,
+        url: document.location + 'images/' + id,
         type: 'DELETE',
         data: {dropbox_auth: $.cookie("dropbox_auth")},
         success: function(result) {
@@ -109,7 +109,7 @@ function addImage(image)
         '<img alt="' + image.title + '" src="data:image/png;base64,' + image.imageData + '"/>' +
         '</a></div></div>',
         '<div id="edit-dialog-' + image.id + '" title="Edit image title">' +
-        '<form role="form" action="/app_dev.php/images/' + image.id + '" id="image-title-edit-form' + image.id + '"> \
+        '<form role="form" action="' + document.location + 'images/' + image.id + '" id="image-title-edit-form' + image.id + '"> \
         <div class="form-group"> \
         <label for="title-image-' + image.id + '">Title:</label> \
         <input type="text" class="form-control" name="title" id="title-image-' + image.id + '" value="'+ image.title +'"> \

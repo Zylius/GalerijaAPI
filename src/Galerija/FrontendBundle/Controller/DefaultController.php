@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Router;
 
 class DefaultController extends Controller
 {
@@ -40,7 +41,7 @@ class DefaultController extends Controller
         $dropboxApi = $this->get('galerija_api.dropbox.oauth');
         $this->get('session')->set('dropbox', ['request' => $dropboxApi->getRequestToken()]);
 
-        return $this->redirect($dropboxApi->getAuthorizeUrl('http://awesome.dev' . $this->get('router')->generate('galerija_dropbox_complete')));
+        return $this->redirect($dropboxApi->getAuthorizeUrl($this->get('router')->generate('galerija_dropbox_complete', [], Router::ABSOLUTE_URL)));
     }
 
     /**
