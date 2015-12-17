@@ -21,7 +21,8 @@ class AppKernel extends Kernel
             new Liip\ImagineBundle\LiipImagineBundle(),
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Galerija\FrontendBundle\GalerijaFrontendBundle(),
-            new Lsw\ApiCallerBundle\LswApiCallerBundle()
+            new Lsw\ApiCallerBundle\LswApiCallerBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

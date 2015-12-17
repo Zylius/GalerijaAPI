@@ -49,6 +49,7 @@ class ImageStoreService
         $this->request = $requestStack->getCurrentRequest();
         if (
             $this->request !== null &&
+            $this->request->getSession() !== null &&
             ($data = $this->request->getSession()->get($this->request->get(self::DROPBOX_STORAGE_NAME))) !== null
         ) {
             $this->files = $files->get('pictures_dropbox');
